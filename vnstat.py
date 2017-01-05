@@ -1,10 +1,11 @@
 from subprocess import getoutput
+import operator
 import json
 import jalali
 from datetime import datetime
-import operator
 
-def traffic(interface='wlp3s0'):
+
+def raw_output(interface='wlp3s0'):
     """ it return a vnstat as json object """
     cmd = 'vnstat -i %s --json' % (interface,)
     vnstat_out = getoutput(cmd)
@@ -13,7 +14,7 @@ def traffic(interface='wlp3s0'):
 
     return vnstat_json
 
-def reformated_traffic():
+def traffic():
     """ reformat data
 
     add persian (jalali) date
@@ -22,7 +23,7 @@ def reformated_traffic():
 
     """
 
-    data = traffic()
+    data = raw_output()
     #print(data)
     for interface in data['interfaces']:
         for traffic_type in ['days', 'months', 'hours']:
@@ -34,14 +35,14 @@ def reformated_traffic():
                 date_string = '%d/%d/%d' % (record['date']['year'],
                                             record['date']['month'], record['date']['day'])
                 record['date'] = datetime(record['date']['year'],
-                                        record['date']['month'], record['date']['day'])
+                                          record['date']['month'], record['date']['day'])
                 record['jdate'] = jalali.Gregorian(date_string)
 
             interface['traffic'][traffic_type].sort(key=lambda x: x.get('date'))
     return data
 
 
-def rx_sum(index='k'):
+def rx_sum():
     """ return sum of rx traffic's """
     traffic_json = traffic()
     sum = 0
