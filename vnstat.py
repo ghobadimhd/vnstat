@@ -43,6 +43,24 @@ def traffic():
             interface['traffic'][traffic_type].sort(key=lambda x: x.get('date'))
     return data
 
+def change_unit(data,to_unit='M'):
+    print('-'*90)
+    units = {'M':10**3, 'G':10**6}
+    divisor = units[to_unit]
+    for interface in data['interfaces']:
+        for traffic_type in ['days', 'months', 'hours']:
+            for record in interface['traffic'][traffic_type]:
+                record['rx'] = record['rx'] / divisor
+                record['tx'] = record['tx'] / divisor
+                print(record)
+                record['total'] = record['total'] / divisor
+            for record in interface['traffic']['tops']:
+                record['rx'] = record['rx'] / divisor
+                record['tx'] = record['tx'] / divisor
+                #record['total'] = record['total'] / divisor
+
+
+    return data
 
 def rx_sum():
     """ return sum of rx traffic's """
