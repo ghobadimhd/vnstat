@@ -39,7 +39,8 @@ def traffic():
                 record['jdate'] = jalali.Gregorian(date_string)
 
                 record['total'] = record['rx'] + record['tx']
-
+            for record in interface['traffic']['tops']:
+                record['total'] = record['rx'] + record['tx']
             interface['traffic'][traffic_type].sort(key=lambda x: x.get('date'))
     return data
 
@@ -57,7 +58,7 @@ def change_unit(data,to_unit='M'):
             for record in interface['traffic']['tops']:
                 record['rx'] = record['rx'] / divisor
                 record['tx'] = record['tx'] / divisor
-                #record['total'] = record['total'] / divisor
+                record['total'] = record['total'] / divisor
 
 
     return data
