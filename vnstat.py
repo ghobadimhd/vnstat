@@ -20,7 +20,7 @@ def traffic():
     add persian (jalali) date
     add date as object
     sort data by date
-
+    add total of rx + tx
     """
 
     data = raw_output()
@@ -37,6 +37,8 @@ def traffic():
                 record['date'] = datetime(record['date']['year'],
                                           record['date']['month'], record['date']['day'])
                 record['jdate'] = jalali.Gregorian(date_string)
+
+                record['total'] = record['rx'] + record['tx']
 
             interface['traffic'][traffic_type].sort(key=lambda x: x.get('date'))
     return data
