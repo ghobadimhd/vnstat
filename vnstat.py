@@ -17,7 +17,7 @@ def read():
     data_json = json.loads(vnstat_out)
     return data_json
 
-def format_data(data, unit='k'):
+def format_data(data, unit='K'):
     """ reformat data
     add persian (jalali) date
     add date as object
