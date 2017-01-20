@@ -96,3 +96,10 @@ def get_months(data, interface=None):
        {nick: [ months ]}
     """
     return get(data, 'months', interface)
+
+def get_hours(data, interface=None):
+    """ get hourly traffic's
+    if no interface specified it returns all interfaces data in format:
+       {nick: [ hours ]}
+    """
+    return get(data, 'hours', interface)
