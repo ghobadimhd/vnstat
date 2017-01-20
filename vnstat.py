@@ -103,3 +103,10 @@ def get_hours(data, interface=None):
        {nick: [ hours ]}
     """
     return get(data, 'hours', interface)
+
+def get_tops(data, interface=None):
+    """ get tops traffic's set
+    if no interface specified it returns all interfaces data in format:
+       {nick: [ tops ]}
+    """
+    return get(data, 'tops', interface)
