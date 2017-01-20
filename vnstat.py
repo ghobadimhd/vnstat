@@ -1,7 +1,7 @@
 from subprocess import getoutput
-
+import operator
 import json
-import jalali
+from . import jalali
 from datetime import datetime
 
 
