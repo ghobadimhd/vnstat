@@ -48,7 +48,6 @@ def format_data(data, unit='K'):
                 record['total'] = record['rx'] + record['tx']
                 record['unit'] = unit
             interface['traffic'][traffic_type].sort(key=lambda x: x.get('date'))
-    return data
 
 def convert_unit(data, destination='M'):
     """ convert traffic unit of each record
@@ -76,7 +75,6 @@ def convert_unit(data, destination='M'):
                 record['tx'] = round(record['tx'] * divisor, 2)
                 record['total'] = round(record['total'] * divisor, 2)
                 record['unit'] = destination.upper()
-    return data
 
 def rx_sum(data):
     """ return sum of rx traffic's """
