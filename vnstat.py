@@ -50,8 +50,8 @@ def format_data(data, unit='K'):
             interface['traffic'][traffic_type].sort(key=lambda x: x.get('date'))
     return data
 
-def change_unit(data, destination='M'):
-    """ change traffic unit of each record
+def convert_unit(data, destination='M'):
+    """ convert traffic unit of each record
         units are in Xib but we just save X in record
      """
     units = {'K':2**10, 'M':2**20, 'G':2**30}
