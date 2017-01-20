@@ -82,3 +82,10 @@ def get(data, traffic_set='days', interface=None):
     else:
         iface_data = [item for item in data['interfaces'] if item['nick'] == interface][0]
         return iface_data['traffic'][traffic_set]
+
+def get_days(data, interface=None):
+    """ get daily traffic's
+    if no interface specified it returns all interfaces data in format:
+       {nick: [ days ]}
+    """
+    return get(data, 'days', interface)
