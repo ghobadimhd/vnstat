@@ -71,45 +71,14 @@ def rx_sum(data):
         rx_traffic = rx_traffic + i['rx']
     return rx_traffic
 
-def get_days(data, interface=None):
-    """get days data of interface
-       if no interface specified it returns all interfaces data in format:
-       (nick, [ days ])
-       """
-
-    if interface:
-        return [(item['nick'], item['traffic']['days']) for item in data['interfaces']]
-    else:
-        return data['interfaces'][interface]['traffic']['days']
-
-def get_months(data, interface=None):
-    """get month data of interface
-       if no interface specified it returns all interfaces data in format:
-       (nick, [ months ])
-       """
-
-    if interface:
-        return [(item['nick'], item['traffic']['months']) for item in data['interfaces']]
-    else:
-        return data['interfaces'][interface]['traffic']['months']
-
-def get_hours(data, interface=None):
-    """get hourly data of interface
-       if no interface specified it returns all interfaces data in format:
-       (nick, [ hours ])
-       """
-
-    if interface:
-        return [(item['nick'], item['traffic']['hours']) for item in data['interfaces']]
-    else:
-        return data['interfaces'][interface]['traffic']['hours']
-def get_tops(data, interface=None):
-    """get tops data of interface
+def get(data, traffic_set='days', interface=None):
+    """get set of specific data like days , months
        if no interface specified it returns all interfaces data in format:
        (nick, [ tops ])
        """
 
-    if interface:
-        return [(item['nick'], item['traffic']['tops']) for item in data['interfaces']]
+    if interface is None:
+        return {item['nick']:item['traffic'][traffic_set] for item in data['interfaces']}
     else:
-        return data['interfaces'][interface]['traffic']['tops']
+        iface_data = [item for item in data['interfaces'] if item['nick'] == interface][0]
+        return iface_data['traffic'][traffic_set]
