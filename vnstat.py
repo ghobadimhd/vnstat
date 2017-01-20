@@ -17,7 +17,7 @@ def read():
     data_json = json.loads(vnstat_out)
     return data_json
 
-def format_data(data):
+def format_data(data, unit='k'):
     """ reformat data
     add persian (jalali) date
     add date as object
@@ -42,7 +42,8 @@ def format_data(data):
                 record['jdate'] = jalali.Gregorian(date_string)
 
                 record['total'] = record['rx'] + record['tx']
-                # calucate totla for tops
+                record['unit'] = unit
+            # calucate totla for tops
             for record in interface['traffic']['tops']:
                 record['total'] = record['rx'] + record['tx']
             interface['traffic'][traffic_type].sort(key=lambda x: x.get('date'))
