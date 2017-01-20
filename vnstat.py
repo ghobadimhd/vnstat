@@ -46,23 +46,36 @@ def format_data(data, unit='K'):
             # calucate totla for tops
             for record in interface['traffic']['tops']:
                 record['total'] = record['rx'] + record['tx']
+                record['unit'] = unit
             interface['traffic'][traffic_type].sort(key=lambda x: x.get('date'))
     return data
 
-def change_unit(data, to_unit='M'):
-    """ change traffic unit from KiB to MiB or GiB """
-    units = {'M':10**3, 'G':10**6}
-    divisor = units[to_unit]
+def change_unit(data, destination='M'):
+    """ change traffic unit of each record
+        units are in Xib but we just save X in record
+     """
+    units = {'K':2**10, 'M':2**20, 'G':2**30}
+
     for interface in data['interfaces']:
         for traffic_type in ['days', 'months', 'hours']:
             for record in interface['traffic'][traffic_type]:
-                record['rx'] = record['rx'] / divisor
-                record['tx'] = record['tx'] / divisor
-                record['total'] = record['total'] / divisor
+                # calulating divisor . divisor = source_unit / destination_unit
+                source = record['unit']
+                divisor = units[source.upper()] / units[destination.upper()]
+
+                record['rx'] = round(record['rx'] * divisor, 2)
+                record['tx'] = round(record['tx'] * divisor, 2)
+                record['total'] = round(record['total'] * divisor, 2)
+                record['unit'] = destination.upper()
             for record in interface['traffic']['tops']:
-                record['rx'] = record['rx'] / divisor
-                record['tx'] = record['tx'] / divisor
-                record['total'] = record['total'] / divisor
+                # calulating divisor . divisor = source_unit / destination_unit
+                source = record['unit']
+                divisor = units[source.upper()] / units[destination.upper()]
+
+                record['rx'] = round(record['rx'] * divisor, 2)
+                record['tx'] = round(record['tx'] * divisor, 2)
+                record['total'] = round(record['total'] * divisor, 2)
+                record['unit'] = destination.upper()
     return data
 
 def rx_sum(data):
