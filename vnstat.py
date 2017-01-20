@@ -74,7 +74,7 @@ def rx_sum(data):
 def get(data, traffic_set='days', interface=None):
     """get set of specific data like days , months
        if no interface specified it returns all interfaces data in format:
-       (nick, [ tops ])
+       {nick, [ tops ]}
        """
 
     if interface is None:
