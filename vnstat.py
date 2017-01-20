@@ -89,3 +89,10 @@ def get_days(data, interface=None):
        {nick: [ days ]}
     """
     return get(data, 'days', interface)
+
+def get_months(data, interface=None):
+    """ get monthly traffic's
+    if no interface specified it returns all interfaces data in format:
+       {nick: [ months ]}
+    """
+    return get(data, 'months', interface)
