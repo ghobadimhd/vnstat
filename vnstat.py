@@ -100,7 +100,6 @@ def get(data, traffic_set='days', interface=None, from_date=datetime(1, 1, 1),
        {nick, [ tops ]}
        """
 
-    data = data.copy() # in case that data change
     # make dict from (interface nick , traffic) pair
     iface_traffic = {item['nick']:item['traffic'][traffic_set] for item in data['interfaces']}
     # pick period
