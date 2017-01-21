@@ -43,11 +43,15 @@ def format_data(data, unit='K'):
 
                 record['total'] = record['rx'] + record['tx']
                 record['unit'] = unit
-            # calucate totla for tops
-            for record in interface['traffic']['tops']:
-                record['total'] = record['rx'] + record['tx']
-                record['unit'] = unit
+            #sort record's
             interface['traffic'][traffic_type].sort(key=lambda x: x.get('date'))
+            # calucate totla for tops
+        for record in interface['traffic']['tops']:
+            record['date'] = datetime(record['date']['year'],
+                                      record['date']['month'], record['date']['day'])
+            record['total'] = record['rx'] + record['tx']
+            record['unit'] = unit
+        interface['traffic']['tops'].sort(key=lambda x: x.get('date'))
 
 def record_convert_unit(record, destination='K'):
     """ convert traffic unit of a record
