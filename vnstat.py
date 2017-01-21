@@ -90,11 +90,12 @@ def get(data, traffic_set='days', interface=None):
        {nick, [ tops ]}
        """
 
+    # make dict from (interface nick , traffic) pair
+    iface_traffic = {item['nick']:item['traffic'][traffic_set] for item in data['interfaces']}
     if interface is None:
-        return {item['nick']:item['traffic'][traffic_set] for item in data['interfaces']}
+        return iface_traffic
     else:
-        iface_data = [item for item in data['interfaces'] if item['nick'] == interface][0]
-        return iface_data['traffic'][traffic_set]
+        return iface_traffic.get(interface, [])
 
 def get_days(data, interface=None):
     """ get daily traffic's
