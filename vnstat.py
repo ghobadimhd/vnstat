@@ -93,14 +93,20 @@ def get_date_period(traffic, from_date=datetime(1, 1, 1), to_date=datetime.now()
     return [record for record in traffic
             if record['date'] >= from_date and record['date'] <= to_date]
 
-def get(data, traffic_set='days', interface=None):
+def get(data, traffic_set='days', interface=None, from_date=datetime(1, 1, 1),
+        to_date=datetime.now()):
     """get set of specific data like days , months
        if no interface specified it returns all interfaces data in format:
        {nick, [ tops ]}
        """
 
+    data = data.copy() # in case that data change
     # make dict from (interface nick , traffic) pair
     iface_traffic = {item['nick']:item['traffic'][traffic_set] for item in data['interfaces']}
+    # pick period
+    for iface in iface_traffic:
+        traffic = iface_traffic[iface]
+        iface_traffic[iface] = get_date_period(traffic, from_date, to_date)
     if interface is None:
         return iface_traffic
     else:
