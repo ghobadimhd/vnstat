@@ -84,6 +84,11 @@ def rx_sum(data):
         rx_traffic = rx_traffic + i['rx']
     return rx_traffic
 
+def get_date_period(traffic, from_date=datetime(1, 1, 1), to_date=datetime.now()):
+    """pick date period from traffic list """
+    return [record for record in traffic
+            if record['date'] >= from_date and record['date'] <= to_date]
+
 def get(data, traffic_set='days', interface=None):
     """get set of specific data like days , months
        if no interface specified it returns all interfaces data in format:
