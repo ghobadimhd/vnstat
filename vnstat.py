@@ -53,6 +53,10 @@ def format_data(data, unit='K'):
             record['unit'] = unit
         interface['traffic']['tops'].sort(key=lambda x: x.get('date'))
 
+def interfaces(data):
+    """return a list of interfaces name"""
+    return [interface['nick'] for interface in data['interfaces']]
+
 def record_convert_unit(record, destination='K'):
     """ convert traffic unit of a record
         units are in Xib but we just save X in record
