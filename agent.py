@@ -81,3 +81,18 @@ def stop_daemon():
     else:
         print('agent does not started .')
         return 1
+
+def main():
+    """ main function that pars args """
+    if len(sys.argv) < 2:
+        print('you should give start/stop parameter')
+        return 1
+    first_arg = sys.argv[1]
+    if first_arg == 'start':
+        return start_daemon()
+    if first_arg == 'stop':
+        return stop_daemon()
+
+if __name__ == '__main__':
+    main()
+
