@@ -55,3 +55,29 @@ def daemonize():
     sys.stdout.close()
     sys.stderr.close()
 
+def start_daemon():
+    """ make daemon process and listen for connections """
+    dirname = os.path.dirname(PID_FILE)
+    if not os.path.exists(dirname):
+        os.mkdir(dirname)
+    if os.path.exists(PID_FILE):
+        with open(PID_FILE, 'r') as pidfile:
+            pid = pidfile.read()
+        print('agent process exists with pid: ', pid)
+        return 1
+    else:
+        daemonize()
+        listen(ADDRESS, PORT)
+
+def stop_daemon():
+    """ stop daemon """
+    if os.path.exists(PID_FILE):
+        with open(PID_FILE, 'r') as pidfile:
+            pid = pidfile.read()
+        os.kill(int(pid), 15)
+        os.remove(PID_FILE)
+        print('agent stopped...')
+        return 0
+    else:
+        print('agent does not started .')
+        return 1
