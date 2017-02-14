@@ -1,7 +1,7 @@
 """ python frontend for vnstat cmd/tool """
 
 from subprocess import getoutput
-from datetime import datetime, date
+from datetime import date
 import json
 if __name__ == 'vnstat.vnstat':
     from . import jalali
@@ -38,7 +38,7 @@ def format_data(data, unit='K'):
                 date_string = '%d/%d/%d' % (record['date']['year'],
                                             record['date']['month'], record['date']['day'])
                 record['date'] = date(record['date']['year'],
-                                          record['date']['month'], record['date']['day'])
+                                      record['date']['month'], record['date']['day'])
                 record['jdate'] = jalali.Gregorian(date_string)
 
                 record['total'] = record['rx'] + record['tx']
@@ -48,7 +48,7 @@ def format_data(data, unit='K'):
             # calucate totla for tops
         for record in interface['traffic']['tops']:
             record['date'] = date(record['date']['year'],
-                                      record['date']['month'], record['date']['day'])
+                                  record['date']['month'], record['date']['day'])
             record['total'] = record['rx'] + record['tx']
             record['unit'] = unit
         interface['traffic']['tops'].sort(key=lambda x: x.get('date'))
@@ -92,13 +92,13 @@ def rx_sum(data):
         rx_traffic = rx_traffic + i['rx']
     return rx_traffic
 
-def get_date_period(traffic, from_date=datetime(1, 1, 1), to_date=datetime.now()):
+def get_date_period(traffic, from_date=date(1, 1, 1), to_date=date.today()):
     """pick date period from traffic list """
     return [record for record in traffic
             if record['date'] >= from_date and record['date'] <= to_date]
 
-def get(data, traffic_set='days', interface=None, from_date=datetime(1, 1, 1),
-        to_date=datetime.now()):
+def get(data, traffic_set='days', interface=None, from_date=date(1, 1, 1),
+        to_date=date.today()):
     """get set of specific data like days , months
        if no interface specified it returns all interfaces data in format:
        {nick, [ tops ]}
