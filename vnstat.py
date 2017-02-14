@@ -1,7 +1,7 @@
 """ python frontend for vnstat cmd/tool """
 
 from subprocess import getoutput
-from datetime import datetime
+from datetime import datetime, date
 import json
 if __name__ == 'vnstat.vnstat':
     from . import jalali
@@ -37,7 +37,7 @@ def format_data(data, unit='K'):
                     record['date']['day'] = 1
                 date_string = '%d/%d/%d' % (record['date']['year'],
                                             record['date']['month'], record['date']['day'])
-                record['date'] = datetime(record['date']['year'],
+                record['date'] = date(record['date']['year'],
                                           record['date']['month'], record['date']['day'])
                 record['jdate'] = jalali.Gregorian(date_string)
 
@@ -47,7 +47,7 @@ def format_data(data, unit='K'):
             interface['traffic'][traffic_type].sort(key=lambda x: x.get('date'))
             # calucate totla for tops
         for record in interface['traffic']['tops']:
-            record['date'] = datetime(record['date']['year'],
+            record['date'] = date(record['date']['year'],
                                       record['date']['month'], record['date']['day'])
             record['total'] = record['rx'] + record['tx']
             record['unit'] = unit
