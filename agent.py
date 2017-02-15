@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """ an agent that listen on tcp port and report vnstat json """
 import sys
 import os
