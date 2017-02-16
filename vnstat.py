@@ -101,7 +101,7 @@ def get(data, traffic_set='days', interface=None, from_date=date(1, 1, 1),
        """
 
     # make dict from (interface nick , traffic) pair
-    iface_traffic = {item['nick']:item['traffic'][traffic_set] for item in data['interfaces']}
+    iface_traffic = {item['id']:item['traffic'][traffic_set] for item in data['interfaces']}
     # pick period
     for iface in iface_traffic:
         traffic = iface_traffic[iface]
