@@ -3,10 +3,7 @@
 from subprocess import getoutput
 from datetime import date
 import json
-if __name__ == 'vnstat.vnstat':
-    from . import jalali
-else:
-    import jalali
+import jdatetime
 
 
 
@@ -35,11 +32,10 @@ def format_data(data, unit='K'):
                 # usually it happens in month data
                 if 'day' not in record['date']:
                     record['date']['day'] = 1
-                date_string = '%d/%d/%d' % (record['date']['year'],
-                                            record['date']['month'], record['date']['day'])
+
                 record['date'] = date(record['date']['year'],
                                       record['date']['month'], record['date']['day'])
-                record['jdate'] = jalali.Gregorian(date_string)
+                record['jdate'] = jdatetime.date.fromgregorian(date=record['date'])
 
                 record['total'] = record['rx'] + record['tx']
                 record['unit'] = unit
