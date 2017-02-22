@@ -109,7 +109,7 @@ def get(data, traffic_set='days', interface=None, from_date=date(1, 1, 1),
     if interface is None:
         return iface_traffic
     else:
-        return iface_traffic.get(interface, [])
+        return {interface:iface_traffic.get(interface, [])}
 
 def get_days(data, interface=None):
     """ get daily traffic's
