@@ -13,7 +13,10 @@ LISTEN_BACKLOG = 5
 def send_data(sock):
     """send json data back to client and close connection"""
     data = vnstat.read()
-    sock.sendall(str(data).encode())
+    # convert data ro string and replace ' with "
+    data = str(data).replace('\'', '"')
+    sock.sendall(data.encode())
+    sock.sendall('\r\n'.encode())
     sock.shutdown(socket.SHUT_RDWR)
     sock.close()
     del sock
