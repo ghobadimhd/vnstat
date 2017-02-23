@@ -3,8 +3,8 @@
 from subprocess import getoutput
 from datetime import date
 import json
+import socket
 import jdatetime
-
 
 
 def read():
@@ -13,6 +13,23 @@ def read():
     vnstat_out = getoutput(cmd)
     data_json = json.loads(vnstat_out)
     return data_json
+
+def remote_read(address, port):
+    """ get's raw data from remote agent and return in json """
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
+    sock.connect((address, port))
+    data = ''
+    buff = ''
+    while True:
+        buff = sock.recv(1024)
+        buff = buff.decode('ascii')
+        index = buff.find('\r\n')
+        if index < 0:
+            data += buff
+        else:
+            data += buff[:index]
+            break
+    return json.loads(data)
 
 def format_data(data, unit='K'):
     """ reformat data
