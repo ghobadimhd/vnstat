@@ -2,6 +2,7 @@
 
 from subprocess import getoutput
 from datetime import date
+import re
 import json
 import socket
 import jdatetime
@@ -104,6 +105,20 @@ def rx_sum(data):
     for i in data['interfaces'][0]['traffic']['days']:
         rx_traffic = rx_traffic + i['rx']
     return rx_traffic
+
+def str_to_date(date_str):
+    """convert string to date"""
+    if not isinstance(date_str, str):
+        raise TypeError("date_str is not string.")
+
+    match = re.match(r'^(\d{1,4})-(\d{1,2})-(\d{1,2})$', date_str)
+    if match:
+        year = int(match.group(1))
+        month = int(match.group(2))
+        day = int(match.group(3))
+        return date(year, month, day)
+    else:
+        raise ValueError("could not convert string to date.")
 
 def get_date_period(traffic, from_date=date(1, 1, 1), to_date=date.today()):
     """pick date period from traffic list """
