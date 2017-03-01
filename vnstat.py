@@ -132,6 +132,11 @@ def get(data, traffic_set='days', interface=None, from_date=date(1, 1, 1),
        {nick, [ tops ]}
        """
 
+    if isinstance(from_date, str):
+        from_date = str_to_date(from_date)
+    if isinstance(to_date, str):
+        to_date = str_to_date(to_date)
+
     # make dict from (interface nick , traffic) pair
     iface_traffic = {item['id']:item['traffic'][traffic_set] for item in data['interfaces']}
     # pick period
