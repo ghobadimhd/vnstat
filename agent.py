@@ -31,14 +31,9 @@ def daemonize():
     """ make daemon process """
     pid = os.fork()
     if pid > 0:
-        print('agent pid: ', pid)
-        try:
-            with open(PID_FILE, 'w') as pidfile:
-                pidfile.write(str(pid))
-        except IOError as error:
-            print(error)
-            os.remove(PID_FILE)
+        # parent exit
         sys.exit(0)
+    print(mp.current_process().pid)
     os.chdir('/')
     os.setsid()
     sys.stdout.flush()
@@ -47,43 +42,12 @@ def daemonize():
     sys.stdout.close()
     sys.stderr.close()
 
-def start_daemon():
-    """ make daemon process and listen for connections """
-    dirname = os.path.dirname(PID_FILE)
-    if not os.path.exists(dirname):
-        os.mkdir(dirname)
-    if os.path.exists(PID_FILE):
-        with open(PID_FILE, 'r') as pidfile:
-            pid = pidfile.read()
-        print('agent process exists with pid: ', pid)
-        return 1
-    else:
-        daemonize()
-        listen(ADDRESS, PORT)
-
-def stop_daemon():
-    """ stop daemon """
-    if os.path.exists(PID_FILE):
-        with open(PID_FILE, 'r') as pidfile:
-            pid = pidfile.read()
-        os.kill(int(pid), 15)
-        os.remove(PID_FILE)
-        print('agent stopped...')
-        return 0
-    else:
-        print('agent does not started .')
-        return 1
-
 def main():
     """ main function that pars args """
-    if len(sys.argv) < 2:
-        print('you should give start/stop parameter')
-        return 1
-    first_arg = sys.argv[1]
-    if first_arg == 'start':
-        return start_daemon()
-    if first_arg == 'stop':
-        return stop_daemon()
+    if '-d' in sys.argv:
+        daemonize()
+    start_server(ADDRESS, PORT)
+
 
 if __name__ == '__main__':
     main()
