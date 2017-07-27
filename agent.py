@@ -2,42 +2,30 @@
 """ an agent that listen on tcp port and report vnstat json """
 import sys
 import os
-import socket
+import socketserver
+import multiprocessing as mp
 import vnstat
 
-ADDRESS = '127.0.0.1'
+ADDRESS = '0.0.0.0'
 PORT = 1234
 PID_FILE = '/tmp/pyvnstat/agent.pid'
-LISTEN_BACKLOG = 5
 
-def send_data(sock):
-    """send json data back to client and close connection"""
-    data = vnstat.read()
-    # convert data ro string and replace ' with "
-    data = str(data).replace('\'', '"')
-    sock.sendall(data.encode())
-    sock.sendall('\r\n'.encode())
-    sock.shutdown(socket.SHUT_RDWR)
-    sock.close()
-    del sock
+class ClientHandler(socketserver.StreamRequestHandler):
+    """handler of request that send data to peers"""
+    def handle(self):
+        """send json data back to client and close connection"""
+        data = vnstat.read()
+        # convert data ro string and replace ' with "
+        data = str(data).replace('\'', '"')
+        self.wfile.write(data.encode())
+        self.wfile.write(b'\r\n')
+        self.finish()
+        del data
 
-def listen(address, port):
+def start_server(address, port):
     """listen for connections"""
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    try:
-        sock.bind((address, port))
-        sock.listen(LISTEN_BACKLOG)
-        while True:
-            new_connection, address = sock.accept()
-            send_data(new_connection)
-            # fix me : need logging address
-    except IOError as error: # fix me too general exceptions catch
-        print(error)
-    finally:
-        sock.shutdown(socket.SHUT_RDWR)
-        sock.close()
-        del sock
+    server = socketserver.TCPServer((address, port), ClientHandler)
+    server.serve_forever()
 
 def daemonize():
     """ make daemon process """
