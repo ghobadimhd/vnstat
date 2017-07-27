@@ -9,6 +9,7 @@ import vnstat
 ADDRESS = '0.0.0.0'
 PORT = 1234
 PID_FILE = '/tmp/pyvnstat/agent.pid'
+DAEMONIZE = False
 
 class ClientHandler(socketserver.StreamRequestHandler):
     """handler of request that send data to peers"""
@@ -42,9 +43,28 @@ def daemonize():
     sys.stdout.close()
     sys.stderr.close()
 
+def options():
+    global DAEMONIZE
+    global ADDRESS
+    global PORT
+    for i in range(len(sys.argv)):
+        if sys.argv[i] == '-d':
+            DAEMONIZE = True
+        if sys.argv[i] == '-a':
+            try:
+                ADDRESS = sys.argv[i+1]
+            except:
+                print('incorrect options !\n', file=sys.stderr)
+        if sys.argv[i] == '-p':
+            try:
+                PORT = int(sys.argv[i+1])
+            except:
+                print('incorrect options !\n', file=sys.stderr)
+
 def main():
     """ main function that pars args """
-    if '-d' in sys.argv:
+    options()
+    if DAEMONIZE:
         daemonize()
     start_server(ADDRESS, PORT)
 
