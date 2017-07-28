@@ -2,14 +2,10 @@
 """ an agent that listen on tcp port and report vnstat json """
 import sys
 import os
+from argparse import ArgumentParser
 import socketserver
 import multiprocessing as mp
 import vnstat
-
-ADDRESS = '0.0.0.0'
-PORT = 1234
-PID_FILE = '/tmp/pyvnstat/agent.pid'
-DAEMONIZE = False
 
 class ClientHandler(socketserver.StreamRequestHandler):
     """handler of request that send data to peers"""
@@ -43,30 +39,23 @@ def daemonize():
     sys.stdout.close()
     sys.stderr.close()
 
-def options():
-    global DAEMONIZE
-    global ADDRESS
-    global PORT
-    for i in range(len(sys.argv)):
-        if sys.argv[i] == '-d':
-            DAEMONIZE = True
-        if sys.argv[i] == '-a':
-            try:
-                ADDRESS = sys.argv[i+1]
-            except:
-                print('incorrect options !\n', file=sys.stderr)
-        if sys.argv[i] == '-p':
-            try:
-                PORT = int(sys.argv[i+1])
-            except:
-                print('incorrect options !\n', file=sys.stderr)
+def get_options():
+    """ process command line options """
+    parser = ArgumentParser()
+    parser.add_argument('-a', '--address', dest='address', default='0.0.0.0',
+                        help='bind address')
+    parser.add_argument('-p', '--port', dest='port', default=1234, type=int,
+                        help='listening port')
+    parser.add_argument('-d', '--daemon', dest='daemon', default=False,
+                        action='store_true', help='run in background')
+    return parser.parse_args()
 
 def main():
     """ main function that pars args """
-    options()
-    if DAEMONIZE:
+    options = get_options()
+    if options.daemon:
         daemonize()
-    start_server(ADDRESS, PORT)
+    start_server(options.address, options.port)
 
 
 if __name__ == '__main__':
