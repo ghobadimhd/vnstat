@@ -2,10 +2,16 @@
 """ an agent that listen on tcp port and report vnstat json """
 import sys
 import os
+from signal import signal
 from argparse import ArgumentParser
 import socketserver
 import multiprocessing as mp
 import vnstat
+
+def term(signal, frame):
+    print('\nTerminated by SIGINT')
+    sys.exit(0)
+
 
 class ClientHandler(socketserver.StreamRequestHandler):
     """handler of request that send data to peers"""
@@ -59,5 +65,6 @@ def main():
 
 
 if __name__ == '__main__':
+    signal(2, term)
     main()
 
