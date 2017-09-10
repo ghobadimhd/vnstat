@@ -7,6 +7,8 @@ from argparse import ArgumentParser
 import socketserver
 import multiprocessing as mp
 import vnstat
+import json
+
 
 def term(signal, frame):
     print('\nTerminated by SIGINT')
@@ -15,20 +17,23 @@ def term(signal, frame):
 
 class ClientHandler(socketserver.StreamRequestHandler):
     """handler of request that send data to peers"""
+
     def handle(self):
         """send json data back to client and close connection"""
         data = vnstat.read()
         # convert data ro string and replace ' with "
-        data = str(data).replace('\'', '"')
+        data = json.dumps(data)
         self.wfile.write(data.encode())
         self.wfile.write(b'\r\n')
         self.finish()
         del data
 
+
 def start_server(address, port):
     """listen for connections"""
     server = socketserver.TCPServer((address, port), ClientHandler)
     server.serve_forever()
+
 
 def daemonize():
     """ make daemon process """
@@ -45,6 +50,7 @@ def daemonize():
     sys.stdout.close()
     sys.stderr.close()
 
+
 def get_options():
     """ process command line options """
     parser = ArgumentParser()
@@ -55,6 +61,7 @@ def get_options():
     parser.add_argument('-d', '--daemon', dest='daemon', default=False,
                         action='store_true', help='run in background')
     return parser.parse_args()
+
 
 def main():
     """ main function that pars args """
@@ -67,4 +74,3 @@ def main():
 if __name__ == '__main__':
     signal(2, term)
     main()
-
