@@ -17,19 +17,15 @@ def read():
 
 def remote_read(address, port):
     """ get's raw data from remote agent and return in json """
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
+    sock = socket.socket()
     sock.connect((address, port))
     data = ''
-    buff = ''
-    while True:
-        buff = sock.recv(1024)
-        buff = buff.decode('ascii')
-        index = buff.find('\r\n')
-        if index < 0:
-            data += buff
-        else:
-            data += buff[:index]
-            break
+    chunk = sock.recv(1024)
+    while chunk != b'':
+        chunk = chunk.decode('ascii')
+        data += chunk
+        chunk = sock.recv(1024)
+
     return json.loads(data)
 
 def format_data(data, unit='K'):

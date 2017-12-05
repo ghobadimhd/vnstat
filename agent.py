@@ -31,7 +31,6 @@ class ClientHandler(socketserver.StreamRequestHandler):
         # convert data ro string and replace ' with "
         data = json.dumps(data)
         self.wfile.write(data.encode())
-        self.wfile.write(b'\r\n')
         self.finish()
         del data
 
