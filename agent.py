@@ -2,6 +2,8 @@
 """ an agent that listen on tcp port and report vnstat json """
 import sys
 import os
+import datetime
+import logging
 from signal import signal
 from argparse import ArgumentParser
 import socketserver
@@ -9,6 +11,7 @@ import multiprocessing as mp
 import vnstat
 import json
 
+logging.basicConfig(level=logging.INFO)
 
 def term(signal, frame):
     print('\nTerminated by SIGINT')
@@ -20,6 +23,10 @@ class ClientHandler(socketserver.StreamRequestHandler):
 
     def handle(self):
         """send json data back to client and close connection"""
+        # logging connection
+        time = datetime.datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
+        logging.info(" %s > connection from %s ", time, self.client_address[0])
+        # get data from vnstat
         data = vnstat.read()
         # convert data ro string and replace ' with "
         data = json.dumps(data)
